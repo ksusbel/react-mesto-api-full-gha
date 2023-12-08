@@ -6,6 +6,8 @@ const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 // eslint-disable-next-line consistent-return
 module.exports.getUsers = async (req, res, next) => {
   try {
@@ -147,7 +149,8 @@ module.exports.login = (req, res, next) => {
             throw new UnauthorizedError('Неправильные почта или пароль1');
           }
           // создадим токен
-          const token = jwt.sign({ _id: user._id }, 'some-secret-key');
+          const token = jwt.sign({ _id: user._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
           // вернём токен
           res.send({ token });
         });

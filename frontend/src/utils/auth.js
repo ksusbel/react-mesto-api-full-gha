@@ -1,6 +1,7 @@
 import { getResponse } from "./utils";
 
-export const BASE_URL = "https://auth.nomoreparties.co";
+// export const BASE_URL = "https://auth.nomoreparties.co";
+export const BASE_URL = "https://api.ksusbel.nomoredomains.ru";
 
 export const register = ({ password, email }) => {
     return fetch(`${BASE_URL}/signup`, {

@@ -82,9 +82,11 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: "https://mesto.nomoreparties.co/v1/cohort-73",
+    baseUrl: 'https://api.ksusbel.nomoredomains.ru',
+    // baseUrl: "https://mesto.nomoreparties.co/v1/cohort-73",
     headers: {
-        authorization: "9c48a9c4-fdc2-4c4d-ac5a-9b5a7851a95e",
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+    //    authorization: "9c48a9c4-fdc2-4c4d-ac5a-9b5a7851a95e",
         "Content-Type": "application/json",
     },
 });

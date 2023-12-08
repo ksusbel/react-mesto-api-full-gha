@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -10,8 +11,7 @@ const errorHandler = require('./middlewares/error-handler');
 const auth = require('./middlewares/auth');
 
 // Слушаем 3000 порт
-const { PORT = 3000 } = process.env;
-const DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
+const { PORT = 3000, DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
 
@@ -33,6 +33,12 @@ app.use(express.json());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 минут
   max: 100, // 100 запросов с одного IP
+});
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
 });
 
 app.post(
