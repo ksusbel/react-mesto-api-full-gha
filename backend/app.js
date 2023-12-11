@@ -20,7 +20,18 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'https://localhost:3001',
+      'http://localhost:3001',
+      'https://ksusbel.nomoredomainsmonster.ru',
+      'http://ksusbel.nomoredomainsmonster.ru',
+    ],
+    credentials: true,
+    maxAge: 30,
+  }),
+);
 
 mongoose
   .connect(DATABASE_URL)
