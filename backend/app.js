@@ -9,6 +9,7 @@ const { createUser, login } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 const errorHandler = require('./middlewares/error-handler');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // Слушаем 3000 порт
 const { PORT = 3000, DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
@@ -40,6 +41,9 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
+
+app.use(requestLogger); // подключаем логгер запросов
+// app.use(logger);
 
 app.post(
   '/signup',
@@ -79,6 +83,7 @@ app.use('/*', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
 });
 
+app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors());
 app.use(errorHandler);
 
