@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
+const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { createUser, login } = require('./controllers/users');
@@ -18,6 +19,14 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  cors({
+    origin: ['http://loccalhost:3000', 'https://ksusbel.nomoredomainsmonster.ru'],
+    credentials: true,
+    maxAge: 30,
+  }),
+);
 
 mongoose
   .connect(DATABASE_URL)
