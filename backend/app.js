@@ -20,13 +20,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(
-  cors({
-    origin: ['http://loccalhost:3000', 'https://ksusbel.nomoredomainsmonster.ru'],
-    credentials: true,
-    maxAge: 30,
-  }),
-);
+app.use(cors());
 
 mongoose
   .connect(DATABASE_URL)
