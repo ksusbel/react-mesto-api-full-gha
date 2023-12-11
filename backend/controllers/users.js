@@ -12,9 +12,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
-    return res
-    .status(200)
-    .send(users);
+    return res.status(200).send(users);
   } catch (err) {
     next(err);
   }
@@ -151,10 +149,7 @@ module.exports.login = (req, res, next) => {
             throw new UnauthorizedError('Неправильные почта или пароль1');
           }
           // создадим токен
-          const token = jwt.sign(
-            { _id: user._id },
-            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'
-            );
+          const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
           // вернём токен
           res.send({ token });
         });
