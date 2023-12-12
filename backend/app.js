@@ -13,25 +13,12 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 // Слушаем 3000 порт
-const { PORT = 3000, DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const { PORT = 3001, DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(
-  cors({
-    origin: [
-      'https://localhost:3001',
-      'http://localhost:3001',
-      'https://ksusbel.nomoredomainsmonster.ru',
-      'http://ksusbel.nomoredomainsmonster.ru',
-    ],
-    credentials: true,
-    maxAge: 30,
-  }),
-);
 
 mongoose
   .connect(DATABASE_URL)
@@ -49,6 +36,21 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 минут
   max: 100, // 100 запросов с одного IP
 });
+
+app.use(
+  cors({
+    origin: [
+      'https://localhost:3001',
+      'http://localhost:3001',
+      'https://ksusbel.nomoredomainsmonster.ru',
+      'http://ksusbel.nomoredomainsmonster.ru',
+      'https://api.ksusbel.nomoredomainsmonster.ru',
+      'http://api.ksusbel.nomoredomainsmonster.ru',
+    ],
+    credentials: true,
+    maxAge: 30,
+  }),
+);
 
 app.get('/crash-test', () => {
   setTimeout(() => {

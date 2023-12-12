@@ -8,12 +8,13 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy": "npm run build && scp -r ./dist/* ksusbel@158.160.129.114:/home/ksusbel/react-mesto-api-full-gha/frontend"
+    "deploy": "npm run build && scp -r ./dist/* ksusbel@158.160.129.114:/home/ksusbel/mesto_frontend"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.3.0",
+    "web-vitals": "^3.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

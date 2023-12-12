@@ -16,7 +16,7 @@ import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
 
-import api from "../utils/api";
+import api from "../utils/Api";
 import * as userAuth from "../utils/auth";
 import { withRouter } from "./withRouter";
 
