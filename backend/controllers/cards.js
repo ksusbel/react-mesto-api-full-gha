@@ -30,62 +30,69 @@ module.exports.createCard = (req, res, next) => {
     });
 };
 
-// eslint-disable-next-line consistent-return
-module.exports.deleteCard = async (req, res, next) => {
-  try {
-    const { cardId } = req.params;
-    const card = await Card.findById(cardId);
-    if (!card) {
-      throw new NotFoundError('Карточка не найдена');
-      // return res.status(404).send({ message: 'Карточка не найдена' });
-    }
-    if (card.owner._id.toString() !== req.user._id) {
-      throw new DeleteCardError('Нельзя удалить чужую карточку!');
-      // return res.status(403).send({ message: 'Нельзя удалить чужую карточку!' });
-    }
-    await Card.findOneAndDelete(cardId);
-    return res.status(200).send({ message: 'Карточка удалилась' });
-  } catch (err) {
-    next(err);
-  }
+module.exports.deleteCard = (req, res, next) => {
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    .then((card) => {
+      if (card == null) {
+        throw new NotFoundError('Карточка не найдена');
+      }
+      if (!(card.owner._id.toString() === req.user._id)) {
+        throw new DeleteCardError('Нельзя удалить чужую карточку!');
+      }
+      return Card.findByIdAndDelete(cardId)
+        .then((cardDelete) => res.send(cardDelete))
+        .catch(next);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new ValidationError('Переданы некорректные данные для удаления карточки'));
+      } else {
+        next(err);
+      }
+    });
 };
 
-// eslint-disable-next-line consistent-return
-module.exports.likeCard = async (req, res, next) => {
-  try {
-    const { cardId } = req.params;
-    const card = await Card.findById(cardId);
-    if (!card) {
+module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  {
+    $addToSet: { likes: req.user._id },
+  },
+  { new: true },
+)
+  .populate(['owner', 'likes'])
+  .then((card) => {
+    if (card == null) {
       throw new NotFoundError('Карточка не найдена');
-      // return res.status(404).send({ message: 'Карточка не найдена' });
     }
-    await Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-      { new: true },
-    );
-    return res.send({ message: 'Лайк поставился' });
-  } catch (err) {
-    next(err);
-  }
-};
+    return res.send(card);
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      next(new ValidationError('Переданы некорректные данные'));
+    } else {
+      next(err);
+    }
+  });
 
-// eslint-disable-next-line consistent-return
-module.exports.dislikeCard = async (req, res, next) => {
-  try {
-    const { cardId } = req.params;
-    const card = await Card.findById(cardId);
-    if (!card) {
+module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
+  req.params.cardId,
+  {
+    $pull: { likes: req.user._id },
+  },
+  { new: true },
+)
+  .populate(['owner', 'likes'])
+  .then((card) => {
+    if (card == null) {
       throw new NotFoundError('Карточка не найдена');
-      // return res.status(404).send({ message: 'Карточка не найдена' });
     }
-    await Card.findByIdAndUpdate(
-      req.params.cardId,
-      { $pull: { likes: req.user._id } }, // убрать _id из массива
-      { new: true },
-    );
-    return res.send({ message: 'Лайк убрался' });
-  } catch (err) {
-    next(err);
-  }
-};
+    return res.send(card);
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      next(new ValidationError('Переданы некорректные данные'));
+    } else {
+      next(err);
+    }
+  });

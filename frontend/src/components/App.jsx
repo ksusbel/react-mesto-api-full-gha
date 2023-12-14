@@ -85,7 +85,7 @@ function App() {
 
     function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some((i) => i._id === currentUser._id);
+        const isLiked = card.likes.some(user => user === currentUser._id);
 
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, isLiked)
@@ -101,7 +101,7 @@ function App() {
     function handleCardDelete(card) {
         api.removeCard(card._id)
             .then(() => {
-                setCards((state) => state.filter((c) => c._id !== card._id));
+                setCards((cards) => cards.filter((c) => c._id !== card._id));
             })
             .catch((err) => {
                 console.log(`Ошибка: ${err}`);
@@ -111,7 +111,7 @@ function App() {
     function handleAddPlaceSubmit(newCard) {
         api.addNewCard(newCard)
             .then((res) => {
-                setCards([res, ...cards]);
+                setCards([res.data, ...cards]);
                 closeAllPopups();
             })
             .catch((err) => {
@@ -188,7 +188,7 @@ function App() {
         userAuth
             .getContent(jwt)
             .then((data) => {
-                setUserEmail(data.data.email);
+                setUserEmail(data.email);
                 setLoggedIn(true);
                 navigate("/");
             })
