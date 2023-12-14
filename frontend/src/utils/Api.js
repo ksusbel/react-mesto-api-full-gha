@@ -82,7 +82,7 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: 'https://api.ksusbel.nomoredomainsmonster.ru/',
+    baseUrl: 'https://api.ksusbel.nomoredomainsmonster.ru',
     // baseUrl: "https://mesto.nomoreparties.co/v1/cohort-73",
     headers: {
         authorization: `Bearer ${localStorage.getItem('token')}`,
